@@ -13,15 +13,20 @@ function revalidateStage(stageId: string) {
   revalidatePath("/");
 }
 
+const VALID_STATUSES: StageStatus[] = ["FINISHED", "DNS", "DNF"];
+
 export async function saveStageResultsAction(formData: FormData) {
   const stageId = String(formData.get("stage_id") ?? "");
   const riderIds = formData.getAll("rider_id").map(String);
-  if (!stageId) return;
+  if (!stageId || riderIds.length === 0) return;
 
   const sb = supabaseAdmin();
 
   const rows = riderIds.map((riderId) => {
-    const status = String(formData.get(`status_${riderId}`) ?? "FINISHED") as StageStatus;
+    const rawStatus = String(formData.get(`status_${riderId}`) ?? "FINISHED");
+    const status: StageStatus = VALID_STATUSES.includes(rawStatus as StageStatus)
+      ? (rawStatus as StageStatus)
+      : "FINISHED";
     const timeRaw = String(formData.get(`time_${riderId}`) ?? "");
     const timeSeconds = status === "FINISHED" ? parseTimeToSeconds(timeRaw) : null;
     return {
@@ -35,7 +40,11 @@ export async function saveStageResultsAction(formData: FormData) {
   const { error } = await sb
     .from("stage_results")
     .upsert(rows, { onConflict: "stage_id,rider_id" });
-  if (error) throw new Error(error.message);
+
+  if (error) {
+    console.error("[saveStageResultsAction] erro ao gravar resultados:", error.message);
+    throw new Error(error.message);
+  }
 
   revalidateStage(stageId);
 }

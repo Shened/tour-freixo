@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { fetchAllData } from "@/lib/standings";
 import { formatSecondsToTime } from "@/lib/time";
 import { pointsForPosition, VALID_POSITIONS } from "@/lib/points";
+import StageResultsForm from "./StageResultsForm";
 import {
-  saveStageResultsAction,
   addGoalAction,
   deleteGoalAction,
   addGoalResultAction,
@@ -37,65 +37,21 @@ export default async function AdminStageDetailPage({
 
       <section className="mb-10">
         <h2 className="mb-3 font-semibold">Resultados da etapa</h2>
-        <form action={saveStageResultsAction} className="overflow-hidden rounded-xl border bg-white shadow-sm">
-          <input type="hidden" name="stage_id" value={stage.id} />
-          <table className="w-full text-sm">
-            <thead className="border-b bg-neutral-50 text-left text-neutral-500">
-              <tr>
-                <th className="px-4 py-2 font-medium">Atleta</th>
-                <th className="px-4 py-2 font-medium">Estado</th>
-                <th className="px-4 py-2 font-medium">Tempo (mm:ss)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {riders.map((rider) => {
-                const existing = resultsByRider.get(rider.id);
-                return (
-                  <tr key={rider.id} className="border-b last:border-0">
-                    <td className="px-4 py-2 font-medium">
-                      {rider.name}
-                      <input type="hidden" name="rider_id" value={rider.id} />
-                    </td>
-                    <td className="px-4 py-2">
-                      <select
-                        name={`status_${rider.id}`}
-                        defaultValue={existing?.status ?? "FINISHED"}
-                        className="rounded-lg border border-neutral-300 px-2 py-1 text-sm"
-                      >
-                        <option value="FINISHED">Terminou</option>
-                        <option value="DNS">DNS</option>
-                        <option value="DNF">DNF</option>
-                      </select>
-                    </td>
-                    <td className="px-4 py-2">
-                      <input
-                        name={`time_${rider.id}`}
-                        placeholder="mm:ss"
-                        defaultValue={
-                          existing?.time_seconds != null
-                            ? formatSecondsToTime(existing.time_seconds)
-                            : ""
-                        }
-                        className="w-28 rounded-lg border border-neutral-300 px-2 py-1 text-sm font-mono"
-                      />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          {riders.length === 0 ? (
-            <p className="px-4 py-4 text-sm text-neutral-400">
-              Sem atletas ainda — adiciona atletas primeiro.
-            </p>
-          ) : (
-            <div className="border-t px-4 py-3">
-              <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
-                Guardar resultados
-              </button>
-            </div>
-          )}
-        </form>
+        <StageResultsForm
+          stageId={stage.id}
+          initialRows={riders.map((rider) => {
+            const existing = resultsByRider.get(rider.id);
+            return {
+              id: rider.id,
+              name: rider.name,
+              status: existing?.status ?? "FINISHED",
+              time:
+                existing?.status === "FINISHED" && existing?.time_seconds != null
+                  ? formatSecondsToTime(existing.time_seconds)
+                  : "",
+            };
+          })}
+        />
       </section>
 
       <section>

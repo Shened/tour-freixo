@@ -20,26 +20,33 @@ export interface FullData {
 export async function fetchAllData(): Promise<FullData> {
   const sb = supabasePublic();
 
-  const [
-    { data: riders },
-    { data: stages },
-    { data: stageResults },
-    { data: goals },
-    { data: goalResults },
-  ] = await Promise.all([
-    sb.from("riders").select("*").order("name"),
-    sb.from("stages").select("*").order("number"),
-    sb.from("stage_results").select("*"),
-    sb.from("goals").select("*").order("order_index"),
-    sb.from("goal_results").select("*"),
-  ]);
+  const [ridersRes, stagesRes, stageResultsRes, goalsRes, goalResultsRes] =
+    await Promise.all([
+      sb.from("riders").select("*").order("name"),
+      sb.from("stages").select("*").order("number"),
+      sb.from("stage_results").select("*"),
+      sb.from("goals").select("*").order("order_index"),
+      sb.from("goal_results").select("*"),
+    ]);
+
+  for (const [label, res] of [
+    ["riders", ridersRes],
+    ["stages", stagesRes],
+    ["stage_results", stageResultsRes],
+    ["goals", goalsRes],
+    ["goal_results", goalResultsRes],
+  ] as const) {
+    if (res.error) {
+      console.error(`[fetchAllData] erro ao ler "${label}":`, res.error.message);
+    }
+  }
 
   return {
-    riders: (riders as Rider[]) ?? [],
-    stages: (stages as Stage[]) ?? [],
-    stageResults: (stageResults as StageResult[]) ?? [],
-    goals: (goals as Goal[]) ?? [],
-    goalResults: (goalResults as GoalResult[]) ?? [],
+    riders: (ridersRes.data as Rider[]) ?? [],
+    stages: (stagesRes.data as Stage[]) ?? [],
+    stageResults: (stageResultsRes.data as StageResult[]) ?? [],
+    goals: (goalsRes.data as Goal[]) ?? [],
+    goalResults: (goalResultsRes.data as GoalResult[]) ?? [],
   };
 }
 
