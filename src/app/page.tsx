@@ -1,5 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import Nav from "@/components/Nav";
+import MountainBackdrop from "@/components/MountainBackdrop";
 import { fetchAllData, computeGC, computePointsClassification } from "@/lib/standings";
 import { formatSecondsToTime, formatGap } from "@/lib/time";
 
@@ -13,35 +15,91 @@ export default async function HomePage() {
   const leaderTime = gc[0]?.totalSeconds ?? 0;
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <MountainBackdrop />
       <Nav />
-      <main className="mx-auto max-w-4xl px-4 py-8">
-        <h1 className="mb-1 text-2xl font-bold">Tour de Freixo</h1>
-        <p className="mb-8 text-neutral-500">
-          {data.stages.length} etapa{data.stages.length === 1 ? "" : "s"} ·{" "}
-          {data.riders.length} atletas
+
+      {/* Hero / landing */}
+      <section className="mx-auto flex max-w-4xl flex-col items-center px-4 pb-14 pt-16 text-center sm:pb-20 sm:pt-24">
+        <Image
+          src="/logo.png"
+          alt="Tour de Freixo"
+          width={340}
+          height={510}
+          priority
+          className="h-56 w-auto drop-shadow-[0_0_40px_rgba(249,0,61,0.15)] sm:h-72"
+        />
+        <h2 className="text-center font-display text-4xl font-black tracking-tight text-white sm:text-5xl">
+          By EDCycling
+        </h2>
+        <p className="mt-6 max-w-xl text-balance text-base text-neutral-400 sm:text-lg">
+          A prova amadora de ciclismo em Gondomar.
+        </p>
+        <p className="max-w-xl text-balance text-base text-neutral-400 sm:text-lg">
+          Acompanha a classificação
+          geral, os pontos de sprint e de montanha, etapa a etapa.
         </p>
 
-        <section className="mb-8 rounded-xl border bg-white p-5 shadow-sm">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-semibold">Classificação Geral</h2>
-            <Link href="/classificacao-geral" className="text-sm text-blue-600 hover:underline">
+        <div className="mt-6 flex gap-3 text-xs font-semibold uppercase tracking-widest text-neutral-500">
+          <span className="rounded-full border border-white/10 px-3 py-1">
+            {data.stages.length} etapa{data.stages.length === 1 ? "" : "s"}
+          </span>
+          <span className="rounded-full border border-white/10 px-3 py-1">
+            {data.riders.length} atletas
+          </span>
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/classificacao-geral"
+            className="rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/20 transition hover:bg-brand-light"
+          >
+            Classificação Geral
+          </Link>
+          <Link
+            href="/etapas"
+            className="rounded-full border border-white/15 px-6 py-2.5 text-sm font-semibold text-neutral-200 transition hover:border-brand/50 hover:text-white"
+          >
+            Ver Etapas
+          </Link>
+        </div>
+      </section>
+
+      <main className="mx-auto max-w-4xl px-4 pb-16">
+        <div className="mb-6 flex items-center gap-3">
+          <span className="h-px flex-1 bg-white/10" />
+          <p className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+            Neste momento
+          </p>
+          <span className="h-px flex-1 bg-white/10" />
+        </div>
+
+        <section className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+            <h2 className="font-display text-sm font-black uppercase tracking-widest text-white">
+              Classificação Geral
+            </h2>
+            <Link href="/classificacao-geral" className="text-sm font-semibold text-brand-light hover:text-brand">
               ver tudo →
             </Link>
           </div>
           {gc.length === 0 ? (
-            <p className="text-sm text-neutral-400">Ainda sem resultados.</p>
+            <p className="px-5 py-6 text-sm text-neutral-500">Ainda sem resultados.</p>
           ) : (
-            <ol className="space-y-2">
+            <ol>
               {gc.map((row) => (
-                <li key={row.rider.id} className="flex items-center justify-between text-sm">
-                  <span>
-                    <span className="mr-2 inline-block w-5 font-mono text-neutral-400">
+                <li
+                  key={row.rider.id}
+                  className={`flex items-center justify-between border-b border-white/5 px-5 py-3 text-sm last:border-0 ${row.rank === 1 ? "border-l-4 border-l-brand bg-brand/10" : ""
+                    }`}
+                >
+                  <span className="text-neutral-200">
+                    <span className="mr-3 inline-block w-5 font-mono text-neutral-500">
                       {row.rank}.
                     </span>
                     {row.rider.name}
                   </span>
-                  <span className="font-mono text-neutral-600">
+                  <span className="font-mono text-neutral-400">
                     {row.rank === 1
                       ? formatSecondsToTime(row.totalSeconds)
                       : formatGap(row.totalSeconds - leaderTime)}
@@ -53,48 +111,62 @@ export default async function HomePage() {
         </section>
 
         <div className="grid gap-6 sm:grid-cols-2">
-          <section className="rounded-xl border bg-white p-5 shadow-sm">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="font-semibold">🚩 Pontos — Sprint</h2>
-              <Link href="/pontos" className="text-sm text-blue-600 hover:underline">
+          <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+              <h2 className="font-display text-sm font-black uppercase tracking-widest text-white">
+                🚩 Sprint
+              </h2>
+              <Link href="/pontos" className="text-sm font-semibold text-brand-light hover:text-brand">
                 ver tudo →
               </Link>
             </div>
             {sprint.length === 0 ? (
-              <p className="text-sm text-neutral-400">Sem pontos ainda.</p>
+              <p className="px-5 py-6 text-sm text-neutral-500">Sem pontos ainda.</p>
             ) : (
-              <ol className="space-y-2 text-sm">
+              <ul>
                 {sprint.map((row) => (
-                  <li key={row.rider.id} className="flex justify-between">
+                  <li
+                    key={row.rider.id}
+                    className="flex justify-between border-b border-white/5 px-5 py-3 text-sm text-neutral-200 last:border-0"
+                  >
                     <span>{row.rank}. {row.rider.name}</span>
-                    <span className="font-mono text-neutral-600">{row.points} pts</span>
+                    <span className="font-mono text-neutral-400">{row.points} pts</span>
                   </li>
                 ))}
-              </ol>
+              </ul>
             )}
           </section>
 
-          <section className="rounded-xl border bg-white p-5 shadow-sm">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="font-semibold">⛰️ Pontos — Montanha</h2>
-              <Link href="/pontos" className="text-sm text-blue-600 hover:underline">
+          <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+              <h2 className="font-display text-sm font-black uppercase tracking-widest text-white">
+                ⛰️ Montanha
+              </h2>
+              <Link href="/pontos" className="text-sm font-semibold text-brand-light hover:text-brand">
                 ver tudo →
               </Link>
             </div>
             {mountain.length === 0 ? (
-              <p className="text-sm text-neutral-400">Sem pontos ainda.</p>
+              <p className="px-5 py-6 text-sm text-neutral-500">Sem pontos ainda.</p>
             ) : (
-              <ol className="space-y-2 text-sm">
+              <ul>
                 {mountain.map((row) => (
-                  <li key={row.rider.id} className="flex justify-between">
+                  <li
+                    key={row.rider.id}
+                    className="flex justify-between border-b border-white/5 px-5 py-3 text-sm text-neutral-200 last:border-0"
+                  >
                     <span>{row.rank}. {row.rider.name}</span>
-                    <span className="font-mono text-neutral-600">{row.points} pts</span>
+                    <span className="font-mono text-neutral-400">{row.points} pts</span>
                   </li>
                 ))}
-              </ol>
+              </ul>
             )}
           </section>
         </div>
+
+        <footer className="mt-16 text-center text-xs text-neutral-600">
+          Tour de Freixo
+        </footer>
       </main>
     </div>
   );

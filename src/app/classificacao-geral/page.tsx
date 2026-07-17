@@ -1,8 +1,11 @@
 import Nav from "@/components/Nav";
+import MountainBackdrop from "@/components/MountainBackdrop";
 import { fetchAllData, computeGC, isRiderOutOfGC } from "@/lib/standings";
 import { formatSecondsToTime, formatGap } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
+
+const MEDALS: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
 
 export default async function ClassificacaoGeralPage() {
   const data = await fetchAllData();
@@ -11,17 +14,21 @@ export default async function ClassificacaoGeralPage() {
   const outRiders = data.riders.filter((r) => isRiderOutOfGC(data, r.id));
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <MountainBackdrop />
       <Nav />
-      <main className="mx-auto max-w-3xl px-4 py-8">
-        <h1 className="mb-6 text-2xl font-bold">Classificação Geral</h1>
+      <main className="mx-auto max-w-3xl px-4 py-10">
+        <p className="mb-1 text-sm font-semibold uppercase tracking-widest text-brand">Geral</p>
+        <h1 className="mb-8 font-display text-3xl font-black uppercase tracking-tight text-white">
+          Classificação Geral
+        </h1>
 
         {gc.length === 0 ? (
-          <p className="text-neutral-400">Ainda sem resultados.</p>
+          <p className="text-neutral-500">Ainda sem resultados.</p>
         ) : (
-          <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+          <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
             <table className="w-full text-sm">
-              <thead className="border-b bg-neutral-50 text-left text-neutral-500">
+              <thead className="border-b border-white/10 text-left text-neutral-500">
                 <tr>
                   <th className="px-4 py-3 font-medium">#</th>
                   <th className="px-4 py-3 font-medium">Atleta</th>
@@ -31,16 +38,23 @@ export default async function ClassificacaoGeralPage() {
               </thead>
               <tbody>
                 {gc.map((row) => (
-                  <tr key={row.rider.id} className="border-b last:border-0">
-                    <td className="px-4 py-3 font-mono text-neutral-400">{row.rank}</td>
-                    <td className="px-4 py-3 font-medium">
+                  <tr
+                    key={row.rider.id}
+                    className={`border-b border-white/5 last:border-0 ${
+                      row.rank === 1 ? "border-l-4 border-l-brand bg-brand/10" : ""
+                    }`}
+                  >
+                    <td className="px-4 py-3 font-mono text-neutral-500">
+                      {MEDALS[row.rank] ?? row.rank}
+                    </td>
+                    <td className="px-4 py-3 font-medium text-neutral-100">
                       {row.rider.name}
                       {row.rider.team && (
-                        <span className="ml-2 text-xs text-neutral-400">{row.rider.team}</span>
+                        <span className="ml-2 text-xs text-neutral-500">{row.rider.team}</span>
                       )}
                     </td>
                     <td className="px-4 py-3 text-right text-neutral-500">{row.stagesCompleted}</td>
-                    <td className="px-4 py-3 text-right font-mono">
+                    <td className="px-4 py-3 text-right font-mono text-neutral-300">
                       {row.rank === 1
                         ? formatSecondsToTime(row.totalSeconds)
                         : formatGap(row.totalSeconds - leaderTime)}
@@ -53,13 +67,11 @@ export default async function ClassificacaoGeralPage() {
         )}
 
         {outRiders.length > 0 && (
-          <div className="mt-6 rounded-xl border border-dashed bg-white p-4 text-sm">
-            <p className="mb-2 font-medium text-neutral-600">
+          <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-4 text-sm">
+            <p className="mb-2 font-semibold text-neutral-400">
               Fora da Geral (DNS/DNF numa etapa)
             </p>
-            <p className="text-neutral-400">
-              {outRiders.map((r) => r.name).join(", ")}
-            </p>
+            <p className="text-neutral-600">{outRiders.map((r) => r.name).join(", ")}</p>
           </div>
         )}
       </main>

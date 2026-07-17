@@ -33,10 +33,10 @@ export default async function AdminStageDetailPage({
   return (
     <div>
       <p className="mb-1 font-mono text-sm text-neutral-400">Etapa {stage.number}</p>
-      <h1 className="mb-6 text-2xl font-bold">{stage.name}</h1>
+      <h1 className="mb-6 text-2xl font-bold text-neutral-900">{stage.name}</h1>
 
       <section className="mb-10">
-        <h2 className="mb-3 font-semibold">Resultados da etapa</h2>
+        <h2 className="mb-3 font-semibold text-neutral-700">Resultados da etapa</h2>
         <StageResultsForm
           stageId={stage.id}
           initialRows={riders.map((rider) => {
@@ -55,16 +55,16 @@ export default async function AdminStageDetailPage({
       </section>
 
       <section>
-        <h2 className="mb-3 font-semibold">Metas volantes (sprint / montanha)</h2>
+        <h2 className="mb-3 font-semibold text-neutral-700">Metas volantes (sprint / montanha)</h2>
 
         <form
           action={addGoalAction}
-          className="mb-6 flex flex-wrap items-end gap-3 rounded-xl border bg-white p-4 shadow-sm"
+          className="mb-6 flex flex-wrap items-end gap-3 rounded-xl border bg-white p-4 text-neutral-900 shadow-sm"
         >
           <input type="hidden" name="stage_id" value={stage.id} />
           <div>
             <label className="mb-1 block text-xs font-medium text-neutral-500">Tipo</label>
-            <select name="type" className="rounded-lg border border-neutral-300 px-3 py-2 text-sm">
+            <select name="type" className="rounded-lg border border-neutral-300 bg-white text-neutral-900 px-3 py-2 text-sm">
               <option value="SPRINT">🚩 Sprint</option>
               <option value="MOUNTAIN">⛰️ Montanha</option>
             </select>
@@ -75,10 +75,10 @@ export default async function AdminStageDetailPage({
               name="name"
               required
               placeholder="Ex: Alto do Freixo"
-              className="rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+              className="rounded-lg border border-neutral-300 bg-white text-neutral-900 px-3 py-2 text-sm"
             />
           </div>
-          <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+          <button className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-light">
             Adicionar meta
           </button>
         </form>
@@ -95,7 +95,7 @@ export default async function AdminStageDetailPage({
               const riderById = new Map(riders.map((r) => [r.id, r]));
 
               return (
-                <div key={goal.id} className="overflow-hidden rounded-xl border bg-white shadow-sm">
+                <div key={goal.id} className="overflow-hidden rounded-xl border bg-white text-neutral-900 shadow-sm">
                   <div className="flex items-center justify-between border-b px-4 py-3">
                     <h3 className="font-semibold">
                       {goal.type === "SPRINT" ? "🚩" : "⛰️"} {goal.name}
@@ -138,7 +138,7 @@ export default async function AdminStageDetailPage({
 
                   <form
                     action={addGoalResultAction}
-                    className="flex flex-wrap items-end gap-3 border-t bg-neutral-50 px-4 py-3"
+                    className="flex flex-wrap items-end gap-3 border-t bg-neutral-50 text-neutral-900 px-4 py-3"
                   >
                     <input type="hidden" name="stage_id" value={stage.id} />
                     <input type="hidden" name="goal_id" value={goal.id} />
@@ -149,7 +149,7 @@ export default async function AdminStageDetailPage({
                       <select
                         name="rider_id"
                         required
-                        className="rounded-lg border border-neutral-300 px-2 py-1 text-sm"
+                        className="rounded-lg border border-neutral-300 bg-white text-neutral-900 px-2 py-1 text-sm"
                       >
                         {riders.map((rider) => (
                           <option key={rider.id} value={rider.id}>
@@ -165,7 +165,7 @@ export default async function AdminStageDetailPage({
                       <select
                         name="position"
                         required
-                        className="rounded-lg border border-neutral-300 px-2 py-1 text-sm"
+                        className="rounded-lg border border-neutral-300 bg-white text-neutral-900 px-2 py-1 text-sm"
                       >
                         {VALID_POSITIONS.map((pos) => (
                           <option key={pos} value={pos}>

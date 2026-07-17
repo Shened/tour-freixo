@@ -22,11 +22,11 @@ Stack: Next.js 15 (App Router, TypeScript), Tailwind CSS, Supabase (Postgres).
 Copia `.env.local.example` para `.env.local` e preenche:
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=https://tmqkaxtdmnpzwydgxcwm.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_vU7x8ExE6YQvWcoTVTW43g_vmeolpu6
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtcWtheHRkbW5wend5ZGd4Y3dtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NDE0NTg5MywiZXhwIjoyMDk5NzIxODkzfQ.27MQiHlrqtHH1xs1sV_n0uOm77FEYceha6aElLDVQ0Y
-ADMIN_PASSWORD=Jpinguim15
-ADMIN_SESSION_SECRET=d72265d0a5b6b739910c3ec8c9ae99728934483abb34737090b1fa9520e97433
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+ADMIN_PASSWORD=escolhe-uma-password
+ADMIN_SESSION_SECRET=openssl rand -hex 32
 ```
 
 `ADMIN_SESSION_SECRET` é usada para assinar o cookie de sessão do admin — gera uma string aleatória (por ex. `openssl rand -hex 32`).

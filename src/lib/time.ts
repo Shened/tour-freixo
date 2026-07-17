@@ -34,7 +34,8 @@ export function formatSecondsToTime(totalSeconds: number | null): string {
   return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
 }
 
-// Formata uma diferença de tempo relativa ao líder, ex: "+1:23"
+// Formata uma diferença de tempo relativa ao líder, ex: "+1:23".
+// Em caso de empate (diferença 0), mostra "+0:00" em vez de um traço.
 export function formatGap(totalSeconds: number): string {
   if (totalSeconds < 0) return "—";
   return `+${formatSecondsToTime(totalSeconds)}`;

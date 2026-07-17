@@ -8,26 +8,26 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Painel de administração</h1>
+      <h1 className="mb-6 text-2xl font-bold text-neutral-900">Painel de administração</h1>
       <div className="grid gap-4 sm:grid-cols-2">
         <Link
           href="/admin/riders"
-          className="rounded-xl border bg-white p-5 shadow-sm hover:border-blue-300"
+          className="rounded-xl border bg-white p-5 text-neutral-900 shadow-sm hover:border-brand/40"
         >
           <p className="text-sm text-neutral-500">Atletas</p>
-          <p className="text-2xl font-bold">{data.riders.length}</p>
+          <p className="text-2xl font-black text-brand">{data.riders.length}</p>
         </Link>
         <Link
           href="/admin/stages"
-          className="rounded-xl border bg-white p-5 shadow-sm hover:border-blue-300"
+          className="rounded-xl border bg-white p-5 text-neutral-900 shadow-sm hover:border-brand/40"
         >
           <p className="text-sm text-neutral-500">Etapas</p>
-          <p className="text-2xl font-bold">{data.stages.length}</p>
+          <p className="text-2xl font-black text-brand">{data.stages.length}</p>
         </Link>
       </div>
 
       <div className="mt-8">
-        <h2 className="mb-3 font-semibold">Etapas recentes</h2>
+        <h2 className="mb-3 font-semibold text-neutral-700">Etapas recentes</h2>
         {data.stages.length === 0 ? (
           <p className="text-sm text-neutral-400">Nenhuma etapa criada ainda.</p>
         ) : (
@@ -40,7 +40,7 @@ export default async function AdminDashboard() {
                 <li key={stage.id}>
                   <Link
                     href={`/admin/stages/${stage.id}`}
-                    className="flex items-center justify-between rounded-xl border bg-white px-4 py-3 shadow-sm hover:border-blue-300"
+                    className="flex items-center justify-between rounded-xl border bg-white px-4 py-3 text-neutral-900 shadow-sm hover:border-brand/40"
                   >
                     <span>
                       <span className="mr-2 font-mono text-neutral-400">
@@ -48,7 +48,7 @@ export default async function AdminDashboard() {
                       </span>
                       {stage.name}
                     </span>
-                    <span className="text-sm text-blue-600">editar →</span>
+                    <span className="text-sm text-brand-light">editar →</span>
                   </Link>
                 </li>
               ))}

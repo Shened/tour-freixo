@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
+import MountainBackdrop from "@/components/MountainBackdrop";
 import { fetchAllData } from "@/lib/standings";
 import { pointsForPosition } from "@/lib/points";
 import { formatSecondsToTime, formatGap } from "@/lib/time";
@@ -31,26 +32,36 @@ export default async function EtapaDetailPage({
     .sort((a, b) => a.order_index - b.order_index);
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <MountainBackdrop />
       <Nav />
-      <main className="mx-auto max-w-3xl px-4 py-8">
-        <p className="mb-1 font-mono text-sm text-neutral-400">Etapa {stage.number}</p>
-        <h1 className="mb-6 text-2xl font-bold">{stage.name}</h1>
+      <main className="mx-auto max-w-3xl px-4 py-10">
+        <p className="mb-1 font-mono text-sm text-neutral-500">Etapa {stage.number}</p>
+        <h1 className="mb-8 font-display text-3xl font-black uppercase tracking-tight text-white">
+          {stage.name}
+        </h1>
 
-        <section className="mb-8 overflow-hidden rounded-xl border bg-white shadow-sm">
-          <h2 className="border-b px-4 py-3 font-semibold">Classificação da etapa</h2>
+        <section className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+          <h2 className="border-b border-white/10 px-5 py-4 font-display text-sm font-black uppercase tracking-widest text-white">
+            Classificação da etapa
+          </h2>
           {finished.length === 0 && dnf.length === 0 && dns.length === 0 ? (
-            <p className="px-4 py-4 text-sm text-neutral-400">Ainda sem resultados.</p>
+            <p className="px-5 py-6 text-sm text-neutral-500">Ainda sem resultados.</p>
           ) : (
             <table className="w-full text-sm">
               <tbody>
                 {finished.map((r, i) => {
                   const rider = riderById.get(r.rider_id);
                   return (
-                    <tr key={r.id} className="border-b last:border-0">
-                      <td className="w-10 px-4 py-2 font-mono text-neutral-400">{i + 1}</td>
-                      <td className="px-4 py-2 font-medium">{rider?.name ?? "—"}</td>
-                      <td className="px-4 py-2 text-right font-mono">
+                    <tr
+                      key={r.id}
+                      className={`border-b border-white/5 last:border-0 ${
+                        i === 0 ? "border-l-4 border-l-brand bg-brand/10" : ""
+                      }`}
+                    >
+                      <td className="w-10 px-4 py-3 font-mono text-neutral-500">{i + 1}</td>
+                      <td className="px-4 py-3 font-medium text-neutral-100">{rider?.name ?? "—"}</td>
+                      <td className="px-4 py-3 text-right font-mono text-neutral-400">
                         {i === 0
                           ? formatSecondsToTime(r.time_seconds ?? 0)
                           : formatGap((r.time_seconds ?? 0) - leaderTime)}
@@ -61,10 +72,10 @@ export default async function EtapaDetailPage({
                 {dnf.map((r) => {
                   const rider = riderById.get(r.rider_id);
                   return (
-                    <tr key={r.id} className="border-b bg-red-50/40 last:border-0">
-                      <td className="w-10 px-4 py-2 font-mono text-neutral-300">—</td>
-                      <td className="px-4 py-2 text-neutral-500">{rider?.name ?? "—"}</td>
-                      <td className="px-4 py-2 text-right text-xs font-semibold text-red-500">
+                    <tr key={r.id} className="border-b border-white/5 last:border-0">
+                      <td className="w-10 px-4 py-3 font-mono text-neutral-700">—</td>
+                      <td className="px-4 py-3 text-neutral-500">{rider?.name ?? "—"}</td>
+                      <td className="px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-red-400">
                         DNF
                       </td>
                     </tr>
@@ -73,10 +84,10 @@ export default async function EtapaDetailPage({
                 {dns.map((r) => {
                   const rider = riderById.get(r.rider_id);
                   return (
-                    <tr key={r.id} className="border-b bg-neutral-50 last:border-0">
-                      <td className="w-10 px-4 py-2 font-mono text-neutral-300">—</td>
-                      <td className="px-4 py-2 text-neutral-500">{rider?.name ?? "—"}</td>
-                      <td className="px-4 py-2 text-right text-xs font-semibold text-neutral-400">
+                    <tr key={r.id} className="border-b border-white/5 last:border-0">
+                      <td className="w-10 px-4 py-3 font-mono text-neutral-700">—</td>
+                      <td className="px-4 py-3 text-neutral-500">{rider?.name ?? "—"}</td>
+                      <td className="px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-neutral-600">
                         DNS
                       </td>
                     </tr>
@@ -88,7 +99,7 @@ export default async function EtapaDetailPage({
         </section>
 
         {goals.length === 0 ? (
-          <p className="text-sm text-neutral-400">
+          <p className="text-sm text-neutral-500">
             Sem metas volantes (sprint/montanha) nesta etapa.
           </p>
         ) : (
@@ -98,22 +109,27 @@ export default async function EtapaDetailPage({
                 .filter((gr) => gr.goal_id === goal.id)
                 .sort((a, b) => a.position - b.position);
               return (
-                <section key={goal.id} className="overflow-hidden rounded-xl border bg-white shadow-sm">
-                  <h3 className="border-b px-4 py-3 font-semibold">
+                <section
+                  key={goal.id}
+                  className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]"
+                >
+                  <h3 className="border-b border-white/10 px-5 py-3 font-display text-sm font-black uppercase tracking-widest text-white">
                     {goal.type === "SPRINT" ? "🚩" : "⛰️"} {goal.name}
                   </h3>
                   {goalResults.length === 0 ? (
-                    <p className="px-4 py-3 text-sm text-neutral-400">Sem resultados.</p>
+                    <p className="px-5 py-4 text-sm text-neutral-500">Sem resultados.</p>
                   ) : (
                     <table className="w-full text-sm">
                       <tbody>
                         {goalResults.map((gr) => {
                           const rider = riderById.get(gr.rider_id);
                           return (
-                            <tr key={gr.id} className="border-b last:border-0">
-                              <td className="w-10 px-4 py-2 font-mono text-neutral-400">{gr.position}</td>
-                              <td className="px-4 py-2">{rider?.name ?? "—"}</td>
-                              <td className="px-4 py-2 text-right font-mono text-neutral-600">
+                            <tr key={gr.id} className="border-b border-white/5 last:border-0">
+                              <td className="w-10 px-4 py-3 font-mono text-neutral-500">
+                                {gr.position}
+                              </td>
+                              <td className="px-4 py-3 text-neutral-200">{rider?.name ?? "—"}</td>
+                              <td className="px-4 py-3 text-right font-mono text-neutral-400">
                                 {pointsForPosition(gr.position)} pts
                               </td>
                             </tr>

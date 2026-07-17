@@ -47,7 +47,7 @@ export default function StageResultsForm({
 
   if (rows.length === 0) {
     return (
-      <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border bg-white text-neutral-900 shadow-sm">
         <p className="px-4 py-4 text-sm text-neutral-400">
           Sem atletas ainda — adiciona atletas primeiro.
         </p>
@@ -56,7 +56,7 @@ export default function StageResultsForm({
   }
 
   return (
-    <form action={handleSubmit} className="overflow-hidden rounded-xl border bg-white shadow-sm">
+    <form action={handleSubmit} className="overflow-hidden rounded-xl border bg-white text-neutral-900 shadow-sm">
       <input type="hidden" name="stage_id" value={stageId} />
       <table className="w-full text-sm">
         <thead className="border-b bg-neutral-50 text-left text-neutral-500">
@@ -80,7 +80,7 @@ export default function StageResultsForm({
                     name={`status_${row.id}`}
                     value={row.status}
                     onChange={(e) => updateStatus(row.id, e.target.value as StageStatus)}
-                    className="rounded-lg border border-neutral-300 px-2 py-1 text-sm"
+                    className="rounded-lg border border-neutral-300 bg-white text-neutral-900 px-2 py-1 text-sm"
                   >
                     <option value="FINISHED">Terminou</option>
                     <option value="DNS">DNS</option>
@@ -94,7 +94,7 @@ export default function StageResultsForm({
                     value={row.time}
                     disabled={disabled}
                     onChange={(e) => updateTime(row.id, e.target.value)}
-                    className="w-28 rounded-lg border border-neutral-300 px-2 py-1 text-sm font-mono disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-400"
+                    className="w-28 rounded-lg border border-neutral-300 bg-white text-neutral-900 px-2 py-1 text-sm font-mono disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-400"
                   />
                 </td>
               </tr>
@@ -106,7 +106,7 @@ export default function StageResultsForm({
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+          className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-light disabled:opacity-60"
         >
           {isPending ? "A guardar…" : "Guardar resultados"}
         </button>

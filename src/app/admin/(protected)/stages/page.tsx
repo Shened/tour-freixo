@@ -11,11 +11,11 @@ export default async function AdminStagesPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Etapas</h1>
+      <h1 className="mb-6 text-2xl font-bold text-neutral-900">Etapas</h1>
 
       <form
         action={addStageAction}
-        className="mb-8 flex flex-wrap items-end gap-3 rounded-xl border bg-white p-4 shadow-sm"
+        className="mb-8 flex flex-wrap items-end gap-3 rounded-xl border bg-white p-4 text-neutral-900 shadow-sm"
       >
         <div>
           <label className="mb-1 block text-xs font-medium text-neutral-500">Nº</label>
@@ -24,7 +24,7 @@ export default async function AdminStagesPage() {
             type="number"
             defaultValue={nextNumber}
             required
-            className="w-20 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-20 rounded-lg border border-neutral-300 bg-white text-neutral-900 px-3 py-2 text-sm focus:border-brand focus:outline-none"
           />
         </div>
         <div>
@@ -33,7 +33,7 @@ export default async function AdminStagesPage() {
             name="name"
             required
             placeholder="Ex: Freixo — Aveleda"
-            className="rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="rounded-lg border border-neutral-300 bg-white text-neutral-900 px-3 py-2 text-sm focus:border-brand focus:outline-none"
           />
         </div>
         <div>
@@ -41,10 +41,10 @@ export default async function AdminStagesPage() {
           <input
             name="date"
             type="date"
-            className="rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="rounded-lg border border-neutral-300 bg-white text-neutral-900 px-3 py-2 text-sm focus:border-brand focus:outline-none"
           />
         </div>
-        <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+        <button className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-light">
           Criar etapa
         </button>
       </form>
@@ -57,13 +57,13 @@ export default async function AdminStagesPage() {
             <li key={stage.id}>
               <Link
                 href={`/admin/stages/${stage.id}`}
-                className="flex items-center justify-between rounded-xl border bg-white px-4 py-3 shadow-sm hover:border-blue-300"
+                className="flex items-center justify-between rounded-xl border bg-white px-4 py-3 text-neutral-900 shadow-sm hover:border-brand/40"
               >
                 <span>
                   <span className="mr-2 font-mono text-neutral-400">Etapa {stage.number}</span>
                   {stage.name}
                 </span>
-                <span className="text-sm text-blue-600">gerir →</span>
+                <span className="text-sm text-brand-light">gerir →</span>
               </Link>
             </li>
           ))}

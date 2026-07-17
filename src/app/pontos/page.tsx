@@ -1,7 +1,10 @@
 import Nav from "@/components/Nav";
+import MountainBackdrop from "@/components/MountainBackdrop";
 import { fetchAllData, computePointsClassification } from "@/lib/standings";
 
 export const dynamic = "force-dynamic";
+
+const MEDALS: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
 
 function PointsTable({
   title,
@@ -13,22 +16,27 @@ function PointsTable({
   rows: { rider: { id: string; name: string; team: string | null }; points: number; rank: number }[];
 }) {
   return (
-    <section className="rounded-xl border bg-white shadow-sm">
-      <h2 className="border-b px-4 py-3 font-semibold">
+    <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+      <h2 className="border-b border-white/10 px-5 py-4 font-display text-sm font-black uppercase tracking-widest text-white">
         {icon} {title}
       </h2>
       {rows.length === 0 ? (
-        <p className="px-4 py-4 text-sm text-neutral-400">Sem pontos ainda.</p>
+        <p className="px-5 py-6 text-sm text-neutral-500">Sem pontos ainda.</p>
       ) : (
         <table className="w-full text-sm">
           <tbody>
             {rows.map((row) => (
-              <tr key={row.rider.id} className="border-b last:border-0">
-                <td className="w-10 px-4 py-2 font-mono text-neutral-400">{row.rank}</td>
-                <td className="px-4 py-2 font-medium">{row.rider.name}</td>
-                <td className="px-4 py-2 text-right font-mono text-neutral-600">
-                  {row.points} pts
+              <tr
+                key={row.rider.id}
+                className={`border-b border-white/5 last:border-0 ${
+                  row.rank === 1 ? "border-l-4 border-l-brand bg-brand/10" : ""
+                }`}
+              >
+                <td className="w-10 px-4 py-3 font-mono text-neutral-500">
+                  {MEDALS[row.rank] ?? row.rank}
                 </td>
+                <td className="px-4 py-3 font-medium text-neutral-100">{row.rider.name}</td>
+                <td className="px-4 py-3 text-right font-mono text-neutral-400">{row.points} pts</td>
               </tr>
             ))}
           </tbody>
@@ -44,10 +52,14 @@ export default async function PontosPage() {
   const mountain = computePointsClassification(data, "MOUNTAIN");
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <MountainBackdrop />
       <Nav />
-      <main className="mx-auto max-w-3xl px-4 py-8">
-        <h1 className="mb-6 text-2xl font-bold">Classificações por Pontos</h1>
+      <main className="mx-auto max-w-3xl px-4 py-10">
+        <p className="mb-1 text-sm font-semibold uppercase tracking-widest text-brand">Pontos</p>
+        <h1 className="mb-8 font-display text-3xl font-black uppercase tracking-tight text-white">
+          Classificações por Pontos
+        </h1>
         <div className="grid gap-6 sm:grid-cols-2">
           <PointsTable title="Sprint" icon="🚩" rows={sprint} />
           <PointsTable title="Montanha" icon="⛰️" rows={mountain} />
