@@ -4,14 +4,14 @@ import Link from "next/link";
 export default function Nav() {
   return (
     <header className="sticky top-0 z-10 border-b border-white/10 bg-black/80 backdrop-blur">
-      <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-2">
+      <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center py-1">
           <Image
             src="/logo.png"
             alt="Tour de Freixo"
-            width={72}
-            height={108}
-            className="h-14 w-auto"
+            width={100}
+            height={150}
+            className="h-20 w-auto"
             priority
           />
         </Link>
@@ -33,4 +33,4 @@ export default function Nav() {
       <div className="h-[3px] w-full brand-swoosh" />
     </header>
   );
-}
+} 

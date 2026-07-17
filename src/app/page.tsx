@@ -24,20 +24,19 @@ export default async function HomePage() {
         <Image
           src="/logo.png"
           alt="Tour de Freixo"
-          width={340}
-          height={510}
+          width={480}
+          height={600}
           priority
-          className="h-56 w-auto drop-shadow-[0_0_40px_rgba(249,0,61,0.15)] sm:h-72"
+          className="h-60 w-auto drop-shadow-[0_0_40px_rgba(249,0,61,0.15)] sm:h-[20rem]"
         />
-        <h2 className="text-center font-display text-4xl font-black tracking-tight text-white sm:text-5xl">
+        <h2 className="mt-2 text-center font-display text-sm font-black uppercase tracking-widest text-neutral-500">
           By EDCycling
         </h2>
         <p className="mt-6 max-w-xl text-balance text-base text-neutral-400 sm:text-lg">
           A prova amadora de ciclismo em Gondomar.
         </p>
-        <p className="max-w-xl text-balance text-base text-neutral-400 sm:text-lg">
-          Acompanha a classificação
-          geral, os pontos de sprint e de montanha, etapa a etapa.
+        <p className="mt-2 max-w-xl text-balance text-base text-neutral-400 sm:text-lg">
+          Acompanha a classificação geral, os pontos de sprint e de montanha, etapa a etapa.
         </p>
 
         <div className="mt-6 flex gap-3 text-xs font-semibold uppercase tracking-widest text-neutral-500">
