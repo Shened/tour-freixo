@@ -105,13 +105,29 @@ export async function addGoalResultAction(formData: FormData) {
     return;
   }
 
+  // Se outro atleta já ocupa esta posição nesta meta, liberta a posição primeiro
+  // (senão a unique constraint (goal_id, position) rejeita o upsert abaixo).
+  const { error: freeError } = await sb
+    .from("goal_results")
+    .delete()
+    .eq("goal_id", goalId)
+    .eq("position", position)
+    .neq("rider_id", riderId);
+  if (freeError) {
+    console.error("[addGoalResultAction] erro ao libertar posição:", freeError.message);
+    throw new Error(freeError.message);
+  }
+
   const { error } = await sb
     .from("goal_results")
     .upsert(
       { goal_id: goalId, rider_id: riderId, position },
       { onConflict: "goal_id,rider_id" }
     );
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error("[addGoalResultAction] erro ao gravar resultado:", error.message);
+    throw new Error(error.message);
+  }
 
   revalidateStage(stageId);
 }
