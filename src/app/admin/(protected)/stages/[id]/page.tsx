@@ -92,7 +92,16 @@ export default async function AdminStageDetailPage({
                 .filter((gr) => gr.goal_id === goal.id)
                 .sort((a, b) => a.position - b.position);
               const takenPositions = new Set(goalResults.map((gr) => gr.position));
+              const alreadyScoredRiderIds = new Set(goalResults.map((gr) => gr.rider_id));
+              const dnsRiderIds = new Set(
+                Array.from(resultsByRider.values())
+                  .filter((r) => r.status === "DNS")
+                  .map((r) => r.rider_id)
+              );
               const riderById = new Map(riders.map((r) => [r.id, r]));
+              const availableRiders = riders.filter(
+                (r) => !alreadyScoredRiderIds.has(r.id) && !dnsRiderIds.has(r.id)
+              );
 
               return (
                 <div key={goal.id} className="overflow-hidden rounded-xl border bg-white text-neutral-900 shadow-sm">
@@ -142,41 +151,49 @@ export default async function AdminStageDetailPage({
                   >
                     <input type="hidden" name="stage_id" value={stage.id} />
                     <input type="hidden" name="goal_id" value={goal.id} />
-                    <div>
-                      <label className="mb-1 block text-xs font-medium text-neutral-500">
-                        Atleta
-                      </label>
-                      <select
-                        name="rider_id"
-                        required
-                        className="rounded-lg border border-neutral-300 bg-white text-neutral-900 px-2 py-1 text-sm"
-                      >
-                        {riders.map((rider) => (
-                          <option key={rider.id} value={rider.id}>
-                            {rider.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-xs font-medium text-neutral-500">
-                        Posição
-                      </label>
-                      <select
-                        name="position"
-                        required
-                        className="rounded-lg border border-neutral-300 bg-white text-neutral-900 px-2 py-1 text-sm"
-                      >
-                        {VALID_POSITIONS.map((pos) => (
-                          <option key={pos} value={pos}>
-                            {pos}º {takenPositions.has(pos) ? "(substituir)" : ""} — {pointsForPosition(pos)} pts
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <button className="rounded-lg bg-neutral-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-neutral-900">
-                      Adicionar
-                    </button>
+                    {availableRiders.length === 0 ? (
+                      <p className="text-sm text-neutral-400">
+                        Não há atletas disponíveis para adicionar (já pontuaram todos nesta meta, ou estão em DNS).
+                      </p>
+                    ) : (
+                      <>
+                        <div>
+                          <label className="mb-1 block text-xs font-medium text-neutral-500">
+                            Atleta
+                          </label>
+                          <select
+                            name="rider_id"
+                            required
+                            className="rounded-lg border border-neutral-300 bg-white text-neutral-900 px-2 py-1 text-sm"
+                          >
+                            {availableRiders.map((rider) => (
+                              <option key={rider.id} value={rider.id}>
+                                {rider.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-xs font-medium text-neutral-500">
+                            Posição
+                          </label>
+                          <select
+                            name="position"
+                            required
+                            className="rounded-lg border border-neutral-300 bg-white text-neutral-900 px-2 py-1 text-sm"
+                          >
+                            {VALID_POSITIONS.map((pos) => (
+                              <option key={pos} value={pos}>
+                                {pos}º {takenPositions.has(pos) ? "(substituir)" : ""} — {pointsForPosition(pos)} pts
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <button className="rounded-lg bg-neutral-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-neutral-900">
+                          Adicionar
+                        </button>
+                      </>
+                    )}
                   </form>
                 </div>
               );

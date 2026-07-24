@@ -25,15 +25,15 @@ export default async function HomePage() {
           src="/logo.png"
           alt="Tour de Freixo"
           width={480}
-          height={600}
+          height={720}
           priority
-          className="h-60 w-auto drop-shadow-[0_0_40px_rgba(249,0,61,0.15)] sm:h-[20rem]"
+          className="h-72 w-auto drop-shadow-[0_0_40px_rgba(249,0,61,0.15)] sm:h-[26rem]"
         />
         <h2 className="mt-2 text-center font-display text-sm font-black uppercase tracking-widest text-neutral-500">
           By EDCycling
         </h2>
         <p className="mt-6 max-w-xl text-balance text-base text-neutral-400 sm:text-lg">
-          A prova amadora de ciclismo em Gondomar.
+          Uma brincadeira a sério entre amigos, sobre duas rodas, em Gondomar.
         </p>
         <p className="mt-2 max-w-xl text-balance text-base text-neutral-400 sm:text-lg">
           Acompanha a classificação geral, os pontos de sprint e de montanha, etapa a etapa.
@@ -89,8 +89,9 @@ export default async function HomePage() {
               {gc.map((row) => (
                 <li
                   key={row.rider.id}
-                  className={`flex items-center justify-between border-b border-white/5 px-5 py-3 text-sm last:border-0 ${row.rank === 1 ? "border-l-4 border-l-brand bg-brand/10" : ""
-                    }`}
+                  className={`flex items-center justify-between border-b border-white/5 px-5 py-3 text-sm last:border-0 ${
+                    row.rank === 1 ? "border-l-4 border-l-brand bg-brand/10" : ""
+                  }`}
                 >
                   <span className="text-neutral-200">
                     <span className="mr-3 inline-block w-5 font-mono text-neutral-500">

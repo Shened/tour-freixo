@@ -1,6 +1,7 @@
 import Nav from "@/components/Nav";
 import MountainBackdrop from "@/components/MountainBackdrop";
-import { fetchAllData, computeGC, isRiderOutOfGC } from "@/lib/standings";
+import GcEvolutionChart from "@/components/GcEvolutionChart";
+import { fetchAllData, computeGC, computeGcEvolution, isRiderOutOfGC } from "@/lib/standings";
 import { formatSecondsToTime, formatGap } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
@@ -10,6 +11,7 @@ const MEDALS: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
 export default async function ClassificacaoGeralPage() {
   const data = await fetchAllData();
   const gc = computeGC(data);
+  const evolution = computeGcEvolution(data);
   const leaderTime = gc[0]?.totalSeconds ?? 0;
   const outRiders = data.riders.filter((r) => isRiderOutOfGC(data, r.id));
 
@@ -74,6 +76,13 @@ export default async function ClassificacaoGeralPage() {
             <p className="text-neutral-600">{outRiders.map((r) => r.name).join(", ")}</p>
           </div>
         )}
+
+        <section className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+          <h2 className="border-b border-white/10 px-5 py-4 font-display text-sm font-black uppercase tracking-widest text-white">
+            Evolução da Classificação
+          </h2>
+          <GcEvolutionChart series={evolution.series} points={evolution.points} />
+        </section>
       </main>
     </div>
   );

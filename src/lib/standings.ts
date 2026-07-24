@@ -139,3 +139,70 @@ export function isRiderOutOfGC(data: FullData, riderId: string): boolean {
     (r) => r.rider_id === riderId && r.status !== "FINISHED"
   );
 }
+
+export interface GcEvolutionSeries {
+  riderId: string;
+  riderName: string;
+}
+
+export interface GcEvolutionPoint {
+  stage: number;
+  stageLabel: string;
+  ranks: Record<string, number>; // riderId -> rank at this point in the race
+}
+
+/**
+ * Evolução da classificação geral etapa a etapa: para cada etapa (por ordem),
+ * calcula a posição de cada atleta na GC acumulada até essa etapa.
+ * Só inclui atletas que nunca tiveram DNS/DNF (os mesmos que contam para a GC final).
+ */
+export function computeGcEvolution(data: FullData): {
+  series: GcEvolutionSeries[];
+  points: GcEvolutionPoint[];
+} {
+  const { riders, stages, stageResults } = data;
+
+  const excluded = new Set<string>();
+  for (const r of stageResults) {
+    if (r.status !== "FINISHED") excluded.add(r.rider_id);
+  }
+  const includedRiders = riders.filter((r) => !excluded.has(r.id));
+  const series: GcEvolutionSeries[] = includedRiders.map((r) => ({
+    riderId: r.id,
+    riderName: r.name,
+  }));
+
+  const sortedStages = stages.slice().sort((a, b) => a.number - b.number);
+  const cumulative = new Map<string, number>();
+  const hasRaced = new Set<string>();
+
+  const points: GcEvolutionPoint[] = [];
+
+  for (const stage of sortedStages) {
+    const resultsThisStage = stageResults.filter(
+      (r) => r.stage_id === stage.id && r.status === "FINISHED"
+    );
+    if (resultsThisStage.length === 0) continue;
+
+    for (const res of resultsThisStage) {
+      if (excluded.has(res.rider_id)) continue;
+      cumulative.set(
+        res.rider_id,
+        (cumulative.get(res.rider_id) ?? 0) + (res.time_seconds ?? 0)
+      );
+      hasRaced.add(res.rider_id);
+    }
+
+    const ranked = includedRiders
+      .filter((r) => hasRaced.has(r.id))
+      .map((r) => ({ id: r.id, total: cumulative.get(r.id) ?? 0 }))
+      .sort((a, b) => a.total - b.total);
+
+    const ranks: Record<string, number> = {};
+    ranked.forEach((r, i) => (ranks[r.id] = i + 1));
+
+    points.push({ stage: stage.number, stageLabel: `E${stage.number}`, ranks });
+  }
+
+  return { series, points };
+}

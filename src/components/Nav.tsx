@@ -33,4 +33,4 @@ export default function Nav() {
       <div className="h-[3px] w-full brand-swoosh" />
     </header>
   );
-} 
+}

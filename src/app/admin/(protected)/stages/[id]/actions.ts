@@ -92,6 +92,19 @@ export async function addGoalResultAction(formData: FormData) {
   if (!goalId || !riderId || !position) return;
 
   const sb = supabaseAdmin();
+
+  const { data: stageResult } = await sb
+    .from("stage_results")
+    .select("status")
+    .eq("stage_id", stageId)
+    .eq("rider_id", riderId)
+    .maybeSingle();
+
+  if (stageResult?.status === "DNS") {
+    console.error("[addGoalResultAction] atleta em DNS nesta etapa, não pode pontuar em metas volantes");
+    return;
+  }
+
   const { error } = await sb
     .from("goal_results")
     .upsert(
